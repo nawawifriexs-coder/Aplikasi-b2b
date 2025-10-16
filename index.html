@@ -293,6 +293,26 @@
             color: var(--primary);
         }
         
+        .search-box {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            flex: 1;
+        }
+        
+        .edit-qty-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .edit-qty-form input {
+            width: 100px;
+        }
+        
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -410,6 +430,11 @@
             
             <div class="card">
                 <h2>Daftar Stok</h2>
+                <div class="search-box">
+                    <input type="text" id="searchStock" placeholder="Cari berdasarkan barcode atau nama barang...">
+                    <button id="searchStockBtn">Cari</button>
+                    <button id="resetSearchBtn" class="btn-warning">Reset</button>
+                </div>
                 <div class="action-buttons">
                     <button id="printStockBtn" class="btn-success">Cetak Stok (Excel)</button>
                 </div>
@@ -420,6 +445,8 @@
                             <th>Nama Barang</th>
                             <th>Stok</th>
                             <th>Harga</th>
+                            <th>Total Nilai</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="stockTableBody">
@@ -434,23 +461,38 @@
             <h1>Data Warung</h1>
             <div class="card">
                 <h2>Tambah Data Warung</h2>
-                <div class="upload-area" id="warungUploadArea">
-                    <i>📁</i>
-                    <p>Klik atau seret file CSV/Excel di sini</p>
-                    <input type="file" id="warungFile" accept=".csv,.xlsx,.xls" style="display: none;">
-                </div>
-                <button id="uploadWarungBtn" class="btn-success">Upload Data Warung</button>
-                <div id="warungUploadMessage" class="alert hidden"></div>
+                <form id="warungForm">
+                    <div class="form-group">
+                        <label for="namaWarung">Nama Warung</label>
+                        <input type="text" id="namaWarung" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telpWarung">Telepon</label>
+                        <input type="text" id="telpWarung">
+                    </div>
+                    <div class="form-group">
+                        <label for="alamatWarung">Alamat</label>
+                        <textarea id="alamatWarung" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn-success">Simpan Warung</button>
+                </form>
+                <div id="warungMessage" class="alert hidden"></div>
             </div>
             
             <div class="card">
                 <h2>Daftar Warung</h2>
+                <div class="search-box">
+                    <input type="text" id="searchWarung" placeholder="Cari nama warung...">
+                    <button id="searchWarungBtn">Cari</button>
+                    <button id="resetSearchWarungBtn" class="btn-warning">Reset</button>
+                </div>
                 <table id="warungTable">
                     <thead>
                         <tr>
                             <th>Nama Warung</th>
                             <th>Telepon</th>
                             <th>Alamat</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="warungTableBody">
@@ -465,23 +507,42 @@
             <h1>Data Karyawan</h1>
             <div class="card">
                 <h2>Tambah Data Karyawan</h2>
-                <div class="upload-area" id="karyawanUploadArea">
-                    <i>📁</i>
-                    <p>Klik atau seret file CSV/Excel di sini</p>
-                    <input type="file" id="karyawanFile" accept=".csv,.xlsx,.xls" style="display: none;">
-                </div>
-                <button id="uploadKaryawanBtn" class="btn-success">Upload Data Karyawan</button>
-                <div id="karyawanUploadMessage" class="alert hidden"></div>
+                <form id="karyawanForm">
+                    <div class="form-group">
+                        <label for="namaKaryawan">Nama Karyawan</label>
+                        <input type="text" id="namaKaryawan" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailKaryawan">Email</label>
+                        <input type="email" id="emailKaryawan">
+                    </div>
+                    <div class="form-group">
+                        <label for="roleKaryawan">Role</label>
+                        <select id="roleKaryawan">
+                            <option value="staff">Staff</option>
+                            <option value="admin">Admin</option>
+                            <option value="manager">Manager</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-success">Simpan Karyawan</button>
+                </form>
+                <div id="karyawanMessage" class="alert hidden"></div>
             </div>
             
             <div class="card">
                 <h2>Daftar Karyawan</h2>
+                <div class="search-box">
+                    <input type="text" id="searchKaryawan" placeholder="Cari nama karyawan...">
+                    <button id="searchKaryawanBtn">Cari</button>
+                    <button id="resetSearchKaryawanBtn" class="btn-warning">Reset</button>
+                </div>
                 <table id="karyawanTable">
                     <thead>
                         <tr>
                             <th>Nama Karyawan</th>
                             <th>Email</th>
                             <th>Role</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="karyawanTableBody">
@@ -581,7 +642,7 @@
     </div>
 
     <script>
-        // Konfigurasi Supabase
+        // Konfigurasi Supabase - GANTI DENGAN KREDENSIAL ANDA
         const SUPABASE_URL = 'https://dwfifiqqmrpuatmleoxm.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR3ZmlmaXFxbXJwdWF0bWxlb3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1OTUyNTgsImV4cCI6MjA3NjE3MTI1OH0.BsgjmEm1LVaCzArMZiTvIfG4cV2rD0iK62VfFcxKumU';
         
@@ -593,6 +654,9 @@
         let warungs = [];
         let karyawans = [];
         let orders = [];
+        let filteredProducts = [];
+        let filteredWarungs = [];
+        let filteredKaryawans = [];
         
         // Elemen DOM
         const loginPage = document.getElementById('loginPage');
@@ -749,11 +813,13 @@
             try {
                 const { data, error } = await supabase
                     .from('products')
-                    .select('*');
+                    .select('*')
+                    .order('nama_barang');
                 
                 if (error) throw error;
                 
                 products = data || [];
+                filteredProducts = [...products];
                 renderStockTable();
             } catch (error) {
                 console.error('Error loading products:', error.message);
@@ -765,11 +831,13 @@
             try {
                 const { data, error } = await supabase
                     .from('warungs')
-                    .select('*');
+                    .select('*')
+                    .order('nama_warung');
                 
                 if (error) throw error;
                 
                 warungs = data || [];
+                filteredWarungs = [...warungs];
                 renderWarungTable();
             } catch (error) {
                 console.error('Error loading warungs:', error.message);
@@ -781,11 +849,13 @@
             try {
                 const { data, error } = await supabase
                     .from('karyawans')
-                    .select('*');
+                    .select('*')
+                    .order('nama_karyawan');
                 
                 if (error) throw error;
                 
                 karyawans = data || [];
+                filteredKaryawans = [...karyawans];
                 renderKaryawanTable();
             } catch (error) {
                 console.error('Error loading karyawans:', error.message);
@@ -801,7 +871,8 @@
                         *,
                         warungs(nama_warung, telp, alamat),
                         karyawans(nama_karyawan)
-                    `);
+                    `)
+                    .order('created_at', { ascending: false });
                 
                 if (error) throw error;
                 
@@ -819,21 +890,101 @@
             document.getElementById('totalOrders').textContent = orders.length;
         }
         
-        // Fungsi untuk merender tabel stok
+        // Fungsi untuk merender tabel stok dengan fungsi edit
         function renderStockTable() {
             const tbody = document.getElementById('stockTableBody');
             tbody.innerHTML = '';
             
-            products.forEach(product => {
+            if (filteredProducts.length === 0) {
                 const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="6" style="text-align: center;">Tidak ada data stok</td>`;
+                tbody.appendChild(row);
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const row = document.createElement('tr');
+                const totalNilai = product.stok * product.harga;
+                
                 row.innerHTML = `
                     <td>${product.barcode}</td>
                     <td>${product.nama_barang}</td>
-                    <td>${product.stok}</td>
+                    <td>
+                        <div class="edit-qty-form">
+                            <input type="number" id="qty-${product.id}" value="${product.stok}" min="0">
+                            <button class="btn-success update-qty-btn" data-id="${product.id}">Update</button>
+                        </div>
+                    </td>
                     <td>${formatCurrency(product.harga)}</td>
+                    <td>${formatCurrency(totalNilai)}</td>
+                    <td>
+                        <button class="btn-danger delete-product-btn" data-id="${product.id}">Hapus</button>
+                    </td>
                 `;
                 tbody.appendChild(row);
             });
+            
+            // Event listener untuk update qty
+            document.querySelectorAll('.update-qty-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const productId = btn.getAttribute('data-id');
+                    const qtyInput = document.getElementById(`qty-${productId}`);
+                    const newQty = parseInt(qtyInput.value);
+                    
+                    if (isNaN(newQty) || newQty < 0) {
+                        alert('Qty harus angka positif');
+                        return;
+                    }
+                    
+                    await updateProductQty(productId, newQty);
+                });
+            });
+            
+            // Event listener untuk hapus produk
+            document.querySelectorAll('.delete-product-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const productId = btn.getAttribute('data-id');
+                    if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+                        await deleteProduct(productId);
+                    }
+                });
+            });
+        }
+        
+        // Fungsi untuk update qty produk
+        async function updateProductQty(productId, newQty) {
+            try {
+                const { error } = await supabase
+                    .from('products')
+                    .update({ stok: newQty })
+                    .eq('id', productId);
+                
+                if (error) throw error;
+                
+                showMessage('stockUploadMessage', 'Stok berhasil diupdate!', 'success');
+                await loadProducts();
+            } catch (error) {
+                console.error('Error updating product:', error.message);
+                showMessage('stockUploadMessage', 'Gagal update stok: ' + error.message, 'danger');
+            }
+        }
+        
+        // Fungsi untuk hapus produk
+        async function deleteProduct(productId) {
+            try {
+                const { error } = await supabase
+                    .from('products')
+                    .delete()
+                    .eq('id', productId);
+                
+                if (error) throw error;
+                
+                showMessage('stockUploadMessage', 'Produk berhasil dihapus!', 'success');
+                await loadProducts();
+            } catch (error) {
+                console.error('Error deleting product:', error.message);
+                showMessage('stockUploadMessage', 'Gagal hapus produk: ' + error.message, 'danger');
+            }
         }
         
         // Fungsi untuk merender tabel warung
@@ -841,15 +992,54 @@
             const tbody = document.getElementById('warungTableBody');
             tbody.innerHTML = '';
             
-            warungs.forEach(warung => {
+            if (filteredWarungs.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4" style="text-align: center;">Tidak ada data warung</td>`;
+                tbody.appendChild(row);
+                return;
+            }
+            
+            filteredWarungs.forEach(warung => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${warung.nama_warung}</td>
                     <td>${warung.telp}</td>
                     <td>${warung.alamat}</td>
+                    <td>
+                        <button class="btn-danger delete-warung-btn" data-id="${warung.id}">Hapus</button>
+                    </td>
                 `;
                 tbody.appendChild(row);
             });
+            
+            // Event listener untuk hapus warung
+            document.querySelectorAll('.delete-warung-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const warungId = btn.getAttribute('data-id');
+                    if (confirm('Apakah Anda yakin ingin menghapus warung ini?')) {
+                        await deleteWarung(warungId);
+                    }
+                });
+            });
+        }
+        
+        // Fungsi untuk hapus warung
+        async function deleteWarung(warungId) {
+            try {
+                const { error } = await supabase
+                    .from('warungs')
+                    .delete()
+                    .eq('id', warungId);
+                
+                if (error) throw error;
+                
+                showMessage('warungMessage', 'Warung berhasil dihapus!', 'success');
+                await loadWarungs();
+                populateWarungSelect();
+            } catch (error) {
+                console.error('Error deleting warung:', error.message);
+                showMessage('warungMessage', 'Gagal hapus warung: ' + error.message, 'danger');
+            }
         }
         
         // Fungsi untuk merender tabel karyawan
@@ -857,15 +1047,54 @@
             const tbody = document.getElementById('karyawanTableBody');
             tbody.innerHTML = '';
             
-            karyawans.forEach(karyawan => {
+            if (filteredKaryawans.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4" style="text-align: center;">Tidak ada data karyawan</td>`;
+                tbody.appendChild(row);
+                return;
+            }
+            
+            filteredKaryawans.forEach(karyawan => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${karyawan.nama_karyawan}</td>
                     <td>${karyawan.email}</td>
                     <td>${karyawan.role}</td>
+                    <td>
+                        <button class="btn-danger delete-karyawan-btn" data-id="${karyawan.id}">Hapus</button>
+                    </td>
                 `;
                 tbody.appendChild(row);
             });
+            
+            // Event listener untuk hapus karyawan
+            document.querySelectorAll('.delete-karyawan-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const karyawanId = btn.getAttribute('data-id');
+                    if (confirm('Apakah Anda yakin ingin menghapus karyawan ini?')) {
+                        await deleteKaryawan(karyawanId);
+                    }
+                });
+            });
+        }
+        
+        // Fungsi untuk hapus karyawan
+        async function deleteKaryawan(karyawanId) {
+            try {
+                const { error } = await supabase
+                    .from('karyawans')
+                    .delete()
+                    .eq('id', karyawanId);
+                
+                if (error) throw error;
+                
+                showMessage('karyawanMessage', 'Karyawan berhasil dihapus!', 'success');
+                await loadKaryawans();
+                populateKaryawanSelect();
+            } catch (error) {
+                console.error('Error deleting karyawan:', error.message);
+                showMessage('karyawanMessage', 'Gagal hapus karyawan: ' + error.message, 'danger');
+            }
         }
         
         // Fungsi untuk mengisi dropdown warung
@@ -920,6 +1149,13 @@
             const tbody = document.getElementById('orderHistoryTableBody');
             tbody.innerHTML = '';
             
+            if (orders.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="6" style="text-align: center;">Tidak ada riwayat pesanan</td>`;
+                tbody.appendChild(row);
+                return;
+            }
+            
             orders.forEach(order => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -966,7 +1202,19 @@
         function viewOrder(orderId) {
             const order = orders.find(o => o.id == orderId);
             if (order) {
-                alert(`Detail Pesanan #${order.id}\nWarung: ${order.warungs.nama_warung}\nKaryawan: ${order.karyawans.nama_karyawan}\nTotal: ${formatCurrency(order.total)}`);
+                let detail = `Detail Pesanan #${order.id}\n\n`;
+                detail += `Warung: ${order.warungs.nama_warung}\n`;
+                detail += `Karyawan: ${order.karyawans.nama_karyawan}\n`;
+                detail += `Diskon: ${order.diskon}%\n\n`;
+                detail += `Items:\n`;
+                
+                order.items.forEach((item, index) => {
+                    detail += `${index + 1}. ${item.nama_barang} - ${item.qty} x ${formatCurrency(item.harga)} = ${formatCurrency(item.total)}\n`;
+                });
+                
+                detail += `\nTotal: ${formatCurrency(order.total)}`;
+                
+                alert(detail);
             }
         }
         
@@ -1069,6 +1317,148 @@
                 currency: 'IDR'
             }).format(amount);
         }
+        
+        // Event listener untuk pencarian stok
+        document.getElementById('searchStockBtn').addEventListener('click', searchStock);
+        document.getElementById('searchStock').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchStock();
+        });
+        
+        function searchStock() {
+            const searchTerm = document.getElementById('searchStock').value.toLowerCase();
+            if (!searchTerm) {
+                filteredProducts = [...products];
+            } else {
+                filteredProducts = products.filter(product => 
+                    product.barcode.toLowerCase().includes(searchTerm) ||
+                    product.nama_barang.toLowerCase().includes(searchTerm)
+                );
+            }
+            renderStockTable();
+        }
+        
+        // Event listener untuk reset pencarian stok
+        document.getElementById('resetSearchBtn').addEventListener('click', () => {
+            document.getElementById('searchStock').value = '';
+            filteredProducts = [...products];
+            renderStockTable();
+        });
+        
+        // Event listener untuk pencarian warung
+        document.getElementById('searchWarungBtn').addEventListener('click', searchWarung);
+        document.getElementById('searchWarung').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchWarung();
+        });
+        
+        function searchWarung() {
+            const searchTerm = document.getElementById('searchWarung').value.toLowerCase();
+            if (!searchTerm) {
+                filteredWarungs = [...warungs];
+            } else {
+                filteredWarungs = warungs.filter(warung => 
+                    warung.nama_warung.toLowerCase().includes(searchTerm)
+                );
+            }
+            renderWarungTable();
+        }
+        
+        // Event listener untuk reset pencarian warung
+        document.getElementById('resetSearchWarungBtn').addEventListener('click', () => {
+            document.getElementById('searchWarung').value = '';
+            filteredWarungs = [...warungs];
+            renderWarungTable();
+        });
+        
+        // Event listener untuk pencarian karyawan
+        document.getElementById('searchKaryawanBtn').addEventListener('click', searchKaryawan);
+        document.getElementById('searchKaryawan').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchKaryawan();
+        });
+        
+        function searchKaryawan() {
+            const searchTerm = document.getElementById('searchKaryawan').value.toLowerCase();
+            if (!searchTerm) {
+                filteredKaryawans = [...karyawans];
+            } else {
+                filteredKaryawans = karyawans.filter(karyawan => 
+                    karyawan.nama_karyawan.toLowerCase().includes(searchTerm)
+                );
+            }
+            renderKaryawanTable();
+        }
+        
+        // Event listener untuk reset pencarian karyawan
+        document.getElementById('resetSearchKaryawanBtn').addEventListener('click', () => {
+            document.getElementById('searchKaryawan').value = '';
+            filteredKaryawans = [...karyawans];
+            renderKaryawanTable();
+        });
+        
+        // Event listener untuk form warung
+        document.getElementById('warungForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const namaWarung = document.getElementById('namaWarung').value;
+            const telpWarung = document.getElementById('telpWarung').value;
+            const alamatWarung = document.getElementById('alamatWarung').value;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('warungs')
+                    .insert([
+                        {
+                            nama_warung: namaWarung,
+                            telp: telpWarung,
+                            alamat: alamatWarung
+                        }
+                    ])
+                    .select();
+                
+                if (error) throw error;
+                
+                showMessage('warungMessage', 'Warung berhasil ditambahkan!', 'success');
+                document.getElementById('warungForm').reset();
+                await loadWarungs();
+                populateWarungSelect();
+                
+            } catch (error) {
+                console.error('Error adding warung:', error.message);
+                showMessage('warungMessage', 'Gagal menambah warung: ' + error.message, 'danger');
+            }
+        });
+        
+        // Event listener untuk form karyawan
+        document.getElementById('karyawanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const namaKaryawan = document.getElementById('namaKaryawan').value;
+            const emailKaryawan = document.getElementById('emailKaryawan').value;
+            const roleKaryawan = document.getElementById('roleKaryawan').value;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('karyawans')
+                    .insert([
+                        {
+                            nama_karyawan: namaKaryawan,
+                            email: emailKaryawan,
+                            role: roleKaryawan
+                        }
+                    ])
+                    .select();
+                
+                if (error) throw error;
+                
+                showMessage('karyawanMessage', 'Karyawan berhasil ditambahkan!', 'success');
+                document.getElementById('karyawanForm').reset();
+                await loadKaryawans();
+                populateKaryawanSelect();
+                
+            } catch (error) {
+                console.error('Error adding karyawan:', error.message);
+                showMessage('karyawanMessage', 'Gagal menambah karyawan: ' + error.message, 'danger');
+            }
+        });
         
         // Event listener untuk upload area
         document.querySelectorAll('.upload-area').forEach(area => {
@@ -1452,16 +1842,18 @@
             const data = [
                 ['LAPORAN STOK BARANG'],
                 [''],
-                ['Barcode', 'Nama Barang', 'Stok', 'Harga']
+                ['Barcode', 'Nama Barang', 'Stok', 'Harga', 'Total Nilai']
             ];
             
             // Tambahkan data produk
             products.forEach(product => {
+                const totalNilai = product.stok * product.harga;
                 data.push([
                     product.barcode,
                     product.nama_barang,
                     product.stok,
-                    product.harga
+                    product.harga,
+                    totalNilai
                 ]);
             });
             
@@ -1480,16 +1872,18 @@
             const data = [
                 ['LAPORAN STOK BARANG'],
                 [''],
-                ['Barcode', 'Nama Barang', 'Stok', 'Harga']
+                ['Barcode', 'Nama Barang', 'Stok', 'Harga', 'Total Nilai']
             ];
             
             // Tambahkan data produk
             products.forEach(product => {
+                const totalNilai = product.stok * product.harga;
                 data.push([
                     product.barcode,
                     product.nama_barang,
                     product.stok,
-                    product.harga
+                    product.harga,
+                    totalNilai
                 ]);
             });
             
